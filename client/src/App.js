@@ -5,12 +5,15 @@ import ProductList from "./components/ProductList";
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchProducts = async () => {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`);
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`);
     setProducts(response.data);
+    setFilteredProducts(response.data);
   };
 
   useEffect(() => {
@@ -33,31 +36,62 @@ function App() {
   };
 
   const handleDeleteProduct = async (id) => {
-    await axios.delete(`${process.env.REACT_APP_API_URL}/products/${id}`);
+    await axios.delete(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
     fetchProducts();
   };
 
-  return (
-    <div className="max-w-4xl mx-auto p-4 space-y-4">
-      <header className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Product Management</h1>
-        <button
-          onClick={handleAddProduct}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md"
-        >
-          Add Product
-        </button>
-      </header>
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    setFilteredProducts(
+      products.filter((product) =>
+        product.name.toLowerCase().includes(query)
+      )
+    );
+  };
 
-      {isFormVisible ? (
-        <ProductForm
-          product={selectedProduct}
-          onSave={handleSaveProduct}
-          onCancel={() => setIsFormVisible(false)}
-        />
-      ) : (
-        <ProductList products={products} onEdit={handleEditProduct} onDelete={handleDeleteProduct} />
-      )}
+  return (
+    <div className="w-full mx-auto p-4 sm:p-6 lg:p-8 pt-24 space-y-6">
+      <header className="fixed top-0 left-0 w-full bg-black text-white p-4 pb-6 shadow-md flex flex-wrap justify-between items-center z-10">
+      <a href="/"> <h1 className="text-xl sm:text-2xl font-bold">Product Management</h1> </a>
+      <button
+        onClick={handleAddProduct}
+        className="px-3 py-1.5 sm:px-4 sm:py-2 mt-2 sm:mt-0 bg-white text-black font-semibold rounded-md hover:bg-gray-200"
+      >
+        Add Product
+      </button>
+    </header>
+    <br />
+    <br />
+
+      <div className="space-y-4">
+        {isFormVisible ? (
+          <ProductForm
+            product={selectedProduct}
+            onSave={handleSaveProduct}
+            onCancel={() => setIsFormVisible(false)}
+          />
+        ) : (
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-semibold text-black">All Products</h2>
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={handleSearch}
+                className="w-1/3 px-4 py-2 border border-gray-400 rounded-md "
+              />
+            </div>
+
+            <ProductList
+              products={filteredProducts}
+              onEdit={handleEditProduct}
+              onDelete={handleDeleteProduct}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

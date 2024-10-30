@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 const ProductForm = ({ product, onSave, onCancel }) => {
@@ -17,9 +17,9 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
     try {
       if (product) {
-        await axios.put(`${process.env.REACT_APP_API_URL}/products/${product._id}`, formData);
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/products/${product._id}`, formData);
       } else {
-        await axios.post(`${process.env.REACT_APP_API_URL}/products`, formData);
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/products`, formData);
       }
       onSave();
     } catch (error) {
