@@ -3,11 +3,14 @@ const bodyParser = require("body-parser");
 const productRoutes = require("./routes/productRoutes");
 const connectDB = require("./config/database");
 const path = require("path");
+const cors = require("cors");
 
 require("dotenv").config();
 
 const app = express();
 connectDB();
+
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
