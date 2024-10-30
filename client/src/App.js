@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ProductForm from "./components/ProductForm";
 import ProductList from "./components/ProductList";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -28,6 +30,7 @@ function App() {
   const handleSaveProduct = () => {
     fetchProducts();
     setIsFormVisible(false);
+    toast.success("Product saved successfully!");
   };
 
   const handleEditProduct = (product) => {
@@ -36,8 +39,13 @@ function App() {
   };
 
   const handleDeleteProduct = async (id) => {
-    await axios.delete(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
-    fetchProducts();
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
+      fetchProducts();
+      toast.info("Product deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete product.");
+    }
   };
 
   const handleSearch = (event) => {
@@ -92,6 +100,14 @@ function App() {
           </div>
         )}
       </div>
+      <ToastContainer
+        autoClose={1000} 
+        hideProgressBar={true}
+        closeOnClick
+        pauseOnHover
+        draggable
+        pauseOnFocusLoss
+      />
     </div>
   );
 }

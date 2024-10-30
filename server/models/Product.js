@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     image: { type: String },
   },
-  { timestamps: true } //create the product timestamp that will store the time of creation of that product
+  { timestamps: true } 
 );
 
 module.exports = mongoose.model("Product", productSchema);

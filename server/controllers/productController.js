@@ -1,6 +1,6 @@
 const Product = require("../models/Product");
 
-// Create a new product
+// new product creataion API
 exports.createProduct = async (req, res) => {
   const { name, description, price } = req.body;
   const image = req.file ? req.file.path : null;
@@ -13,7 +13,7 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-// Fetch all products
+// Fetch all products from the database
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
@@ -23,7 +23,7 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-// Fetch a single product by ID
+// get product by ID
 exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -34,7 +34,7 @@ exports.getProductById = async (req, res) => {
   }
 };
 
-// Update product by ID
+// Update by ID
 exports.updateProduct = async (req, res) => {
   const { name, description, price } = req.body;
   const image = req.file ? req.file.path : undefined;
@@ -55,7 +55,7 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-// Delete product by ID
+// Delete by ID
 exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
